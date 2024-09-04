@@ -93,6 +93,19 @@ public class FirstTest {
 
         waitForElementAndSendKeys(
                 By.id("org.wikipedia:id/search_src_text"),
+                "Java",
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Cannot find search field",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
                 "J",
                 "Cannot find search input",
                 5
@@ -140,6 +153,14 @@ public class FirstTest {
         } catch (org.openqa.selenium.NoSuchElementException e) {
             return true;
         }
+
     }
+
+    private WebElement waitForElementAndClear(By by, String error_message, long timeOutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, timeOutInSeconds);
+        element.clear();
+        return element;
+    }
+
 }
 
