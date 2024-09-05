@@ -1,6 +1,7 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -120,6 +121,50 @@ public class FirstTest {
         boolean elementNotPresent = isElementNotPresent(
                 By.id("org.wikipedia:id/search_close_btn"));
         assertTrue("X is still present on the page", elementNotPresent);
+    }
+
+    @Test
+
+    public void testCompareArticleTitle()
+    {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Java",
+                "Cannot find search input",
+                5
+
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_list_item_description"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_contents"),
+                "Cannot find this button",
+                5
+        );
+
+        WebElement title_element = waitForElementPresent(
+                By.id("org.wikipedia:id/page_toc_item_text"),
+                "Cannot find article title",
+                15
+        );
+
+        String article_title = title_element.getText();
+        Assert.assertEquals(
+                "We see unexpected title!",
+                "Java (programming language)",
+                article_title
+        );
     }
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
