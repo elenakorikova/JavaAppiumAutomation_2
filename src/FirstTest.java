@@ -169,17 +169,17 @@ public class FirstTest {
 
     @Test
 
-    public void testComparePlaceholder() {
+    public void testSearchPlaceholderPresent() {
 
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Cannot find Search Wikipedia input",
+                "Cannot find Search input field",
                 5
         );
 
         WebElement title_element = waitForElementPresent(
                 By.id("org.wikipedia:id/search_src_text"),
-                "Cannot find placeholder",
+                "Cannot find placeholder in search field",
                 5
         );
 
