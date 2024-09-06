@@ -167,6 +167,30 @@ public class FirstTest {
         );
     }
 
+    @Test
+
+    public void testComparePlaceholder() {
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        WebElement title_element = waitForElementPresent(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Cannot find placeholder",
+                5
+        );
+
+        String placeholder = title_element.getText();
+        Assert.assertEquals(
+                "We see unexpected placeholder!",
+                "Search Wikipedia",
+                placeholder
+        );
+    }
+
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
