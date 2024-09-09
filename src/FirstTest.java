@@ -14,6 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
@@ -189,6 +190,49 @@ public class FirstTest {
                 "Search Wikipedia",
                 placeholder
         );
+    }
+
+    @Test
+
+    public void testSearchAndCancelSearchOfArticles() {
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search input field",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Baikal",
+                "Cannot find search input",
+                5
+
+        );
+
+        List<WebElement> articles = driver.findElements(By.id("org.wikipedia:id/page_list_item_title"));
+
+        WebElement title_article = waitForElementPresent(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Cannot find article title",
+                20
+        );
+
+        String article_title = title_article.getText();
+        Assert.assertTrue(
+                "The article title does not contain the expected keyword!",
+                article_title.contains("Baikal")
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Cannot find X to cancel search",
+                5
+        );
+
+        boolean elementNotPresent = isElementNotPresent(
+                By.id("org.wikipedia:id/search_close_btn"));
+        assertTrue("X is still present on the page", elementNotPresent);
     }
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
