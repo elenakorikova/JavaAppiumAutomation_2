@@ -211,18 +211,7 @@ public class FirstTest {
         );
 
         List<WebElement> articles = driver.findElements(By.id("org.wikipedia:id/page_list_item_title"));
-
-        WebElement title_article = waitForElementPresent(
-                By.id("org.wikipedia:id/page_list_item_title"),
-                "Cannot find article title",
-                20
-        );
-
-        String article_title = title_article.getText();
-        Assert.assertTrue(
-                "The article title does not contain the expected keyword!",
-                article_title.contains("Baikal")
-        );
+        Assert.assertTrue("Less than 2 articles found!", articles.size() > 1);
 
         waitForElementAndClick(
                 By.id("org.wikipedia:id/search_close_btn"),
@@ -233,6 +222,46 @@ public class FirstTest {
         boolean elementNotPresent = isElementNotPresent(
                 By.id("org.wikipedia:id/search_close_btn"));
         assertTrue("X is still present on the page", elementNotPresent);
+
+        List<WebElement> articlesAfterCancel = driver.findElements(By.id("org.wikipedia:id/page_list_item_title"));
+        Assert.assertTrue(
+                "Articles are still displayed after search is canceled!",
+                articlesAfterCancel.size() == 0
+        );
+    }
+
+    @Test
+
+    public void testSearchOfCorrectArticles() {
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search input field",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Angarsk",
+                "Cannot find search input",
+                5
+
+        );
+
+        List<WebElement> articles = driver.findElements(By.id("org.wikipedia:id/page_list_item_title"));
+        Assert.assertTrue("No articles found!", articles.size() > 0);
+        WebElement title_article = waitForElementPresent(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "Cannot find article title",
+                20
+        );
+        for (WebElement article : articles) {
+            String article_title = title_article.getText();
+            Assert.assertTrue(
+                    "The article title does not contain the expected keyword!" + article_title,
+                    article_title.contains("Angarsk")
+            );
+        }
     }
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
