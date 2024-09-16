@@ -1,18 +1,25 @@
+import com.google.common.collect.ImmutableList;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.PointerInput;
+import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
 
 import java.net.URL;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -264,6 +271,43 @@ public class FirstTest {
         }
     }
 
+    @Test
+
+    public void testSwipeArticle()
+    {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Java",
+                "Cannot find search input",
+                5
+
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_list_item_description"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        Dimension size = driver.manage().window().getSize();
+        int startX = size.width / 2;
+        int startY = (int) (size.height * 0.8);
+        int endY = (int) (size.height * 0.2);
+        Point startPoint = new Point(startX, startY);
+        Point endPoint = new Point(startX, endY);
+
+        swipeUp(startPoint, endPoint, Duration.ofMillis(1000));
+        swipeUp(startPoint, endPoint, Duration.ofMillis(1000));
+        swipeUp(startPoint, endPoint, Duration.ofMillis(1000));
+        swipeUp(startPoint, endPoint, Duration.ofMillis(1000));
+    }
+
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
@@ -304,5 +348,14 @@ public class FirstTest {
         return element;
     }
 
+        protected void swipeUp(Point start, Point end, Duration duration) {
+        PointerInput input = new PointerInput(PointerInput.Kind.TOUCH,"finger1");
+        Sequence swipe = new Sequence(input, 0);
+        swipe.addAction(input.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), start.x, start.y));
+        swipe.addAction(input.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        swipe.addAction(input.createPointerMove(duration, PointerInput.Origin.viewport(), end.x, end.y));
+        swipe.addAction(input.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        driver.perform(ImmutableList.of(swipe));
+    }
 }
 
