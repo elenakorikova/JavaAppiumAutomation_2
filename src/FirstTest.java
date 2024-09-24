@@ -2,6 +2,8 @@ import com.google.common.collect.ImmutableList;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.touch.LongPressOptions;
+import io.appium.java_client.touch.offset.ElementOption;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,6 +12,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Interaction;
+import org.openqa.selenium.interactions.Pause;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -23,6 +27,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -309,6 +314,123 @@ public class FirstTest {
         );
     }
 
+    @Test
+
+    public void saveFirstArticleToMyList(){
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Java",
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_list_item_description"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_toolbar_button_show_overflow_menu"),
+                "Cannot find button to open article options",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "Cannot find option to save article",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/snackbar_action"),
+                "Cannot find button Add to list",
+                5
+        );
+
+        closeBottomSheetByClickingOutside();
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/text_input"),
+                "Learning programming",
+                "Cannot put text into articles folder input",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("android:id/button1"),
+                "Cannot press OK button",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                "Cannot close article, cannot find back button",
+                5
+        );
+
+        if (isElementPresent(By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"))) {
+            waitForElementAndClick(
+                    By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
+                    "Cannot close search, cannot find back button",
+                    5
+            );
+        }
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.FrameLayout[@content-desc='Saved']"),
+                "Cannot find navigation button to saved articles",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/item_title'][@text='Learning programming']"),
+                "Cannot find created folder",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
+                "Cannot find three dots button",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//android.widget.TextView[@text='Delete list']"),
+                "Cannot find delete action",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("android:id/button1"),
+                "Cannot press OK button",
+                5
+        );
+
+        waitForElementNotPresent(
+                By.xpath("//*[@resource-id='org.wikipedia:id/item_title'][@text='Learning programming']"),
+                "Cannot delete folder",
+                5
+        );
+
+    }
+
+    private void waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        boolean isNotPresent = wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+
+        if (!isNotPresent) {
+            throw new AssertionError(error_message);
+        }
+    }
+
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
@@ -383,6 +505,67 @@ public class FirstTest {
             ++already_swiped;
         }
 
+    }
+
+//    protected void longPress(AndroidDriver driver, WebElement element) {
+//        Point location = element.getLocation();
+//        Dimension size = element.getSize();
+//
+//        Point centerOfElement = getCenterOfElement(location, size);
+//
+//        PointerInput finger1 = new PointerInput(PointerInput.Kind.TOUCH, "finger1");
+//        Sequence sequence = new Sequence(finger1, 1);
+//        sequence.addAction(finger1.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), centerOfElement.x, centerOfElement.y));
+//        sequence.addAction(finger1.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+//        sequence.addAction(new Pause(finger1, Duration.ofSeconds(2)));
+//        sequence.addAction(finger1.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+//
+//        driver.perform(ImmutableList.of(sequence));
+//    }
+
+//    private Point getCenterOfElement(Point location, Dimension size) {
+//        int centerX = location.x + size.width / 2;
+//        int centerY = location.y + size.height / 2;
+//        return new Point(centerX, centerY);
+//    }
+
+    private void closeBottomSheetByClickingOutside() {
+        try {
+            WebElement bottomSheetTitle = driver.findElement(By.id("org.wikipedia:id/dialog_title"));
+
+            if (bottomSheetTitle.getText().equals("Move to reading list")) {
+                System.out.println("Bottom sheet 'Move to reading list' is present.");
+
+                Point sheetLocation = bottomSheetTitle.getLocation();
+
+                int clickX = sheetLocation.getX() + 10;
+                int clickY = sheetLocation.getY() - 50;
+
+                PointerInput finger = new PointerInput(PointerInput.Kind.TOUCH, "finger1");
+                Sequence tapSequence = new Sequence(finger, 0);
+
+                tapSequence.addAction(finger.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), clickX, clickY));
+
+                tapSequence.addAction(finger.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+
+                tapSequence.addAction(finger.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+
+                driver.perform(ImmutableList.of(tapSequence));
+
+                System.out.println("Tapped outside bottom sheet to close it.");
+            }
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            System.out.println("Bottom sheet is not present.");
+        }
+    }
+
+    public boolean isElementPresent(By by) {
+        try {
+            driver.findElement(by);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 }
 
