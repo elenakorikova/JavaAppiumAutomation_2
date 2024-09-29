@@ -357,9 +357,11 @@ public class FirstTest {
 
         closeBottomSheetByClickingOutside();
 
+        String name_of_folder = "Learning programming";
+
         waitForElementAndSendKeys(
                 By.id("org.wikipedia:id/text_input"),
-                "Learning programming",
+                name_of_folder,
                 "Cannot put text into articles folder input",
                 5
         );
@@ -391,7 +393,7 @@ public class FirstTest {
         );
 
         waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/item_title'][@text='Learning programming']"),
+                By.xpath("//*[@resource-id='org.wikipedia:id/item_title'][@text='"+ name_of_folder +"']"),
                 "Cannot find created folder",
                 5
         );
@@ -418,6 +420,43 @@ public class FirstTest {
                 By.xpath("//*[@resource-id='org.wikipedia:id/item_title'][@text='Learning programming']"),
                 "Cannot delete folder",
                 5
+        );
+
+    }
+
+    @Test
+
+    public void testAmountOfNotEmptySearch() {
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        String search_line = "Linkin Park Discography";
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                search_line,
+                "Cannot find search input",
+                5
+        );
+
+        String search_result_locator = "//*[@resource-id='org.wikipedia:id/search_results_list']//android.widget.TextView[@text='Linkin Park discography']";
+
+        waitForElementPresent(
+                By.xpath(search_result_locator),
+                "Cannot find anything by the request " + search_line,
+                15
+        );
+
+        int amount_of_search_result = getAmountOfElements(
+                By.xpath(search_result_locator)
+        );
+
+        Assert.assertTrue(
+                "We found too few results!",
+                amount_of_search_result > 0
         );
 
     }
@@ -566,6 +605,11 @@ public class FirstTest {
         } catch (NoSuchElementException e) {
             return false;
         }
+    }
+
+    private int getAmountOfElements(By by) {
+        List elements = driver.findElements(by);
+        return elements.size();
     }
 }
 
