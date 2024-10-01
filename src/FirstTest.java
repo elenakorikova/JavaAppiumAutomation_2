@@ -435,6 +435,7 @@ public class FirstTest {
         );
 
         String search_line = "Linkin Park Discography";
+
         waitForElementAndSendKeys(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 search_line,
@@ -457,6 +458,41 @@ public class FirstTest {
         Assert.assertTrue(
                 "We found too few results!",
                 amount_of_search_result > 0
+        );
+
+    }
+
+    @Test
+
+    public void testAmountOfEmptySearch() {
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        String search_line = "nnsdjknsjds";
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                search_line,
+                "Cannot find search input",
+                5
+        );
+
+        String search_result_locator = "//*[@resource-id='org.wikipedia:id/search_results_list']//android.widget.TextView[@text != 'No results']";
+        String empty_result_label = "//*[@text='No results']";
+
+        waitForElementPresent(
+                By.xpath(empty_result_label),
+                "Cannot find empty result label by the request" + search_line,
+                15
+        );
+
+        assertElemetNotPresent(
+                By.xpath(search_result_locator),
+                "We've found some results by request " + search_line
         );
 
     }
@@ -610,6 +646,14 @@ public class FirstTest {
     private int getAmountOfElements(By by) {
         List elements = driver.findElements(by);
         return elements.size();
+    }
+
+    private void assertElemetNotPresent(By by, String error_message) {
+        int amount_of_elements = getAmountOfElements(by);
+        if (amount_of_elements > 0) {
+            String default_message = "An element '" + by.toString() + "' supposed to be not present";
+            throw new AssertionError(default_message + " " + error_message);
+        }
     }
 }
 
