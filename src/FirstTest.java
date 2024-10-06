@@ -554,6 +554,39 @@ public class FirstTest {
         );
     }
 
+    @Test
+
+    public void testCheckSearchArticleInBackground(){
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Java",
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementPresent(
+                By.id("org.wikipedia:id/page_list_item_description"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        driver.runAppInBackground(2);
+
+        waitForElementPresent(
+                By.id("org.wikipedia:id/page_list_item_description"),
+                "Cannot find article after returning from background",
+                5
+        );
+
+    }
+
     private void waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         boolean isNotPresent = wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
