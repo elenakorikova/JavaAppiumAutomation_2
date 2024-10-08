@@ -45,13 +45,13 @@ public class FirstTest {
 
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723"), capabilities);
         if (driver != null) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("appId", "org.wikipedia");
-        driver.executeScript("mobile: terminateApp", params);
+            Map<String, Object> params = new HashMap<>();
+            params.put("appId", "org.wikipedia");
+            driver.executeScript("mobile: terminateApp", params);
 
-        driver.executeScript("mobile: activateApp", params);
-        Thread.sleep(5000);
-    }
+            driver.executeScript("mobile: activateApp", params);
+            Thread.sleep(5000);
+        }
     }
 
     @After
@@ -70,8 +70,7 @@ public class FirstTest {
     }
 
     @Test
-    public void firstTest()
-    {
+    public void firstTest() {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Cannot find Search Wikipedia input",
@@ -135,8 +134,7 @@ public class FirstTest {
 
     @Test
 
-    public void testCompareArticleTitle()
-    {
+    public void testCompareArticleTitle() {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Cannot find Search Wikipedia input",
@@ -275,8 +273,7 @@ public class FirstTest {
 
     @Test
 
-    public void testSwipeArticle()
-    {
+    public void testSwipeArticle() {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Cannot find Search Wikipedia input",
@@ -313,7 +310,7 @@ public class FirstTest {
 
     @Test
 
-    public void saveFirstArticleToMyList(){
+    public void saveFirstArticleToMyList() {
 
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
@@ -390,7 +387,7 @@ public class FirstTest {
         );
 
         waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/item_title'][@text='"+ name_of_folder +"']"),
+                By.xpath("//*[@resource-id='org.wikipedia:id/item_title'][@text='" + name_of_folder + "']"),
                 "Cannot find created folder",
                 5
         );
@@ -520,7 +517,7 @@ public class FirstTest {
         );
 
         String tittle_before_rotation = waitForElementAndGetText(
-            By.xpath("//*[contains(@text, 'Java (programming language)')]"),
+                By.xpath("//*[contains(@text, 'Java (programming language)')]"),
                 "Cannot find title of article",
                 15
         );
@@ -556,7 +553,7 @@ public class FirstTest {
 
     @Test
 
-    public void testCheckSearchArticleInBackground(){
+    public void testCheckSearchArticleInBackground() {
 
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
@@ -585,6 +582,155 @@ public class FirstTest {
                 5
         );
 
+    }
+
+    @Test
+
+    public void testSaveTwoArticlesInOneFolder() {
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Java",
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Java (programming language)')]"),
+                "Cannot find Java article",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_toolbar_button_show_overflow_menu"),
+                "Cannot find button to open article options",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "Cannot find option to save article",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/snackbar_action"),
+                "Cannot find button Add to list",
+                5
+        );
+
+        closeBottomSheetByClickingOutside();
+
+        String name_of_folder = "Learning programming";
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/text_input"),
+                name_of_folder,
+                "Cannot put text into articles folder input",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("android:id/button1"),
+                "Cannot press OK button",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Python",
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Python (programming language)')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_toolbar_button_show_overflow_menu"),
+                "Cannot find button to open article options",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "Cannot find option to save article",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/snackbar_action"),
+                "Cannot find button Add to list",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Learning programming')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/snackbar_action"),
+                "Cannot find 'View list' button",
+                5
+        );
+
+        waitForElementPresent(
+                By.xpath("//*[contains(@text, 'Python (programming language)')]"),
+                "Cannot find the second article",
+                5
+        );
+
+        swipeElementToLeft(
+                By.xpath("//*[contains(@text, 'Python (programming language)')]"),
+                "Cannot swipe the article"
+        );
+
+        waitForElementPresent(
+                By.xpath("//*[contains(@text, 'Java (programming language)')]"),
+                "Cannot find the second article",
+                5
+        );
+
+        String title_in_the_list = waitForElementAndGetText(
+                By.xpath("//*[contains(@text, 'Java (programming language)')]"),
+                "Cannot find title of article",
+                15
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Java (programming language)')]"),
+                "Cannot choose the second article",
+                5
+        );
+
+        String title_in_the_article = waitForElementAndGetText(
+                By.xpath("//*[contains(@text, 'Java (programming language)')]"),
+                "Cannot find title of article",
+                15
+        );
+
+        Assert.assertEquals(
+                "Article title have been changed",
+                title_in_the_list,
+                title_in_the_article
+        );
     }
 
     private void waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
@@ -636,8 +782,8 @@ public class FirstTest {
         return element;
     }
 
-        protected void swipeUp(Point start, Point end, Duration duration) {
-        PointerInput input = new PointerInput(PointerInput.Kind.TOUCH,"finger1");
+    protected void swipeUp(Point start, Point end, Duration duration) {
+        PointerInput input = new PointerInput(PointerInput.Kind.TOUCH, "finger1");
         Sequence swipe = new Sequence(input, 0);
         swipe.addAction(input.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), start.x, start.y));
         swipe.addAction(input.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
@@ -661,8 +807,8 @@ public class FirstTest {
         int already_swiped = 0;
         while (driver.findElements(by).size() == 0) {
 
-            if(already_swiped > max_swipes) {
-                waitForElementPresent(by,"Cannot find element by swiping up.\n" + error_message, 0);
+            if (already_swiped > max_swipes) {
+                waitForElementPresent(by, "Cannot find element by swiping up.\n" + error_message, 0);
                 return;
             }
 
@@ -750,5 +896,38 @@ public class FirstTest {
         WebElement element = waitForElementPresent(by, error_message, timeOutInSeconds);
         return element.getText();
     }
-}
 
+    protected void swipeLeft(Point start, Point end, Duration duration) {
+        PointerInput input = new PointerInput(PointerInput.Kind.TOUCH, "finger1");
+        Sequence swipe = new Sequence(input, 0);
+        swipe.addAction(input.createPointerMove(Duration.ZERO, PointerInput.Origin.viewport(), start.x, start.y));
+        swipe.addAction(input.createPointerDown(PointerInput.MouseButton.LEFT.asArg()));
+        swipe.addAction(input.createPointerMove(duration, PointerInput.Origin.viewport(), end.x, end.y));
+        swipe.addAction(input.createPointerUp(PointerInput.MouseButton.LEFT.asArg()));
+        driver.perform(ImmutableList.of(swipe));
+    }
+
+    protected void swipeLeftQuick() {
+        Dimension size = driver.manage().window().getSize();
+        int startX = (int) (size.width * 0.8);
+        int endX = (int) (size.width * 0.2);
+        int startY = size.height / 2;
+
+        Point startPoint = new Point(startX, startY);
+        Point endPoint = new Point(endX, startY);
+
+        swipeLeft(startPoint, endPoint, Duration.ofMillis(200));
+    }
+
+    public void swipeElementToLeft(By by, String error_message) {
+        WebElement element = waitForElementPresent(by, error_message, 20);
+
+        int leftX = element.getLocation().getX();
+        int rightX = leftX + element.getSize().getWidth();
+        int upperY = element.getLocation().getY();
+        int lowerY = upperY + element.getSize().getHeight();
+        int middleY = (upperY + lowerY) / 2;
+
+        swipeLeft(new Point(rightX, middleY), new Point(leftX, middleY), Duration.ofMillis(300));
+    }
+}
