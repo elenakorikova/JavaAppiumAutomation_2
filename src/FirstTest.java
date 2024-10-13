@@ -733,6 +733,42 @@ public class FirstTest {
         );
     }
 
+    @Test
+
+    public void testArticleHaveTitle() {
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Cannot find Search Wikipedia input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "Java",
+                "Cannot find search input",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Java (programming language)')]"),
+                "Cannot find Java article",
+                5
+        );
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_contents"),
+                "Cannot find Contents button",
+                5
+        );
+
+        assertElementPresent(
+                By.id("org.wikipedia:id/page_toc_item_text"),
+                "Элемент заголовка не найден на странице"
+        );
+
+    }
+
     private void waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         boolean isNotPresent = wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
@@ -929,5 +965,13 @@ public class FirstTest {
         int middleY = (upperY + lowerY) / 2;
 
         swipeLeft(new Point(rightX, middleY), new Point(leftX, middleY), Duration.ofMillis(300));
+    }
+
+    private void assertElementPresent(By by, String error_message) {
+        try {
+            driver.findElement(by);
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            throw new AssertionError(error_message + ": Элемент не найден");
+        }
     }
 }
