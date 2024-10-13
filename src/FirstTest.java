@@ -57,6 +57,13 @@ public class FirstTest {
     @After
     public void tearDown() {
         if (driver != null) {
+
+            try {
+                driver.rotate(ScreenOrientation.PORTRAIT);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             try {
                 driver.hideKeyboard();
             } catch (Exception e) {
@@ -86,7 +93,7 @@ public class FirstTest {
         );
 
         waitForElementPresent(
-                By.xpath("//*[@bounds='[0,488][1080,712]']//*[@text='Object-oriented programming language']"),
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_description'][@text='Object-oriented programming language']"),
                 "Cannot find 'Object-oriented programming language' topic search by Java",
                 15
         );
