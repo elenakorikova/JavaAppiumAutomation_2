@@ -1,83 +1,21 @@
 import com.google.common.collect.ImmutableList;
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.TouchAction;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.touch.LongPressOptions;
-import io.appium.java_client.touch.offset.ElementOption;
-import org.junit.After;
+import lib.CoreTestCase;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Interaction;
-import org.openqa.selenium.interactions.Pause;
 import org.openqa.selenium.interactions.PointerInput;
 import org.openqa.selenium.interactions.Sequence;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import io.appium.java_client.touch.WaitOptions;
-import io.appium.java_client.touch.offset.PointOption;
 
-import java.net.URL;
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.assertTrue;
-
-public class FirstTest {
-
-    private AppiumDriver driver;
-
-    @Before
-    public void setUp() throws Exception {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "Google_Nexus_5");
-        capabilities.setCapability("platformVersion", "11");
-        capabilities.setCapability("appium:automationName", "UiAutomator2");
-        capabilities.setCapability("appPackage", "org.wikipedia");
-        capabilities.setCapability("appActivity", ".main.MainActivity");
-        capabilities.setCapability("app", "/Users/elenakorikova/Desktop/JavaAppiumAutomation/JavaAppiumAutomation_2/JavaAppiumAutomation_2/apks/org.wikipedia_50467_apps.evozi.com.apk");
-
-        driver = new AndroidDriver(new URL("http://127.0.0.1:4723"), capabilities);
-        if (driver != null) {
-            Map<String, Object> params = new HashMap<>();
-            params.put("appId", "org.wikipedia");
-            driver.executeScript("mobile: terminateApp", params);
-
-            driver.executeScript("mobile: activateApp", params);
-            Thread.sleep(5000);
-        }
-    }
-
-    @After
-    public void tearDown() {
-        if (driver != null) {
-
-            try {
-                driver.rotate(ScreenOrientation.PORTRAIT);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try {
-                driver.hideKeyboard();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Map<String, Object> params = new HashMap<>();
-            params.put("appId", "org.wikipedia");
-            driver.executeScript("mobile: terminateApp", params);
-            driver.quit();
-        }
-    }
+public class FirstTest extends CoreTestCase {
 
     @Test
-    public void firstTest() {
+    public void testSearch() {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "Cannot find Search Wikipedia input",
@@ -317,7 +255,7 @@ public class FirstTest {
 
     @Test
 
-    public void saveFirstArticleToMyList() {
+    public void testSaveFirstArticleToMyList() {
 
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
