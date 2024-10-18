@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: cglib:cglib:3.3.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="cglib" artifactId="cglib" version="3.3.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/cglib/cglib/3.3.0/c956b9f9708af5901e9cf05701e9b2b1c25027cc/cglib-3.3.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
