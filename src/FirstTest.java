@@ -1,4 +1,5 @@
 import lib.CoreTestCase;
+import lib.ui.ArticlePageObject;
 import lib.ui.MainPageObject;
 import lib.ui.SearchPageObject;
 import org.junit.Assert;
@@ -19,7 +20,9 @@ public class FirstTest extends CoreTestCase {
 
     @Test
     public void testSearch() {
+
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
+
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.waitForSearchResult("Object-oriented programming language");
@@ -28,7 +31,9 @@ public class FirstTest extends CoreTestCase {
     @Test
 
     public void testCancelSearch() {
+
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
+
         SearchPageObject.initSearchInput();
         SearchPageObject.typeSearchLine("Java");
         SearchPageObject.waitForCancelButtonToAppear();
@@ -39,39 +44,17 @@ public class FirstTest extends CoreTestCase {
     @Test
 
     public void testCompareArticleTitle() {
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Cannot find Search Wikipedia input",
-                5
-        );
 
-        MainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Java",
-                "Cannot find search input",
-                5
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
 
-        );
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Java");
+        SearchPageObject.clickByArticleWithSubString("Object-oriented programming language");
 
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/page_list_item_description"),
-                "Cannot find Search Wikipedia input",
-                5
-        );
+        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject.clickButtonOnTabbar();
+        String article_title = ArticlePageObject.getArticleTitle();
 
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/page_contents"),
-                "Cannot find this button",
-                5
-        );
-
-        WebElement title_element = MainPageObject.waitForElementPresent(
-                By.id("org.wikipedia:id/page_toc_item_text"),
-                "Cannot find article title",
-                15
-        );
-
-        String article_title = title_element.getText();
         Assert.assertEquals(
                 "We see unexpected title!",
                 "Java (programming language)",
@@ -178,38 +161,19 @@ public class FirstTest extends CoreTestCase {
     @Test
 
     public void testSwipeArticle() {
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Cannot find Search Wikipedia input",
-                5
-        );
 
-        MainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Appium",
-                "Cannot find search input",
-                5
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
 
-        );
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Appium");
+        SearchPageObject.clickByArticleWithSubString("Automation for Apps");
 
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='Appium']"),
-                "Cannot find Appium article in search",
-                5
-        );
+        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject.clickButtonOnTabbar();
+        ArticlePageObject.waitForTitleElement();
+        ArticlePageObject.clickOnTitle();
 
-        Dimension size = driver.manage().window().getSize();
-        int startX = size.width / 2;
-        int startY = (int) (size.height * 0.8);
-        int endY = (int) (size.height * 0.2);
-        Point startPoint = new Point(startX, startY);
-        Point endPoint = new Point(startX, endY);
-
-        MainPageObject.swipeUpToFindElement(
-                By.xpath("//*[@text='View article in browser']"),
-                "Cannot find the end of the article",
-                20
-        );
+        ArticlePageObject.swipeToFooter();
     }
 
     @Test
