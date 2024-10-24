@@ -1,7 +1,5 @@
 import lib.CoreTestCase;
-import lib.ui.ArticlePageObject;
-import lib.ui.MainPageObject;
-import lib.ui.SearchPageObject;
+import lib.ui.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.*;
@@ -180,103 +178,28 @@ public class FirstTest extends CoreTestCase {
 
     public void testSaveFirstArticleToMyList() {
 
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Cannot find Search Wikipedia input",
-                5
-        );
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
 
-        MainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Java",
-                "Cannot find search input",
-                5
-        );
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Java");
+        SearchPageObject.clickByArticleWithSubString("Object-oriented programming language");
 
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/page_list_item_description"),
-                "Cannot find Search Wikipedia input",
-                5
-        );
+        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject.waitForTitleElement();
 
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/page_toolbar_button_show_overflow_menu"),
-                "Cannot find button to open article options",
-                5
-        );
-
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/page_save"),
-                "Cannot find option to save article",
-                5
-        );
-
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/snackbar_action"),
-                "Cannot find button Add to list",
-                5
-        );
-
-        MainPageObject.closeBottomSheetByClickingOutside();
-
+        String article_title = ArticlePageObject.getArticleTitle();
         String name_of_folder = "Learning programming";
+        ArticlePageObject.addArticleToMyList(name_of_folder);
+        ArticlePageObject.closeArticle();
 
-        MainPageObject.waitForElementAndSendKeys(
-                By.id("org.wikipedia:id/text_input"),
-                name_of_folder,
-                "Cannot put text into articles folder input",
-                5
-        );
+        NavigationUI NavigationUI = new NavigationUI(driver);
+        NavigationUI.clickSaved();
 
-        MainPageObject.waitForElementAndClick(
-                By.id("android:id/button1"),
-                "Cannot press OK button",
-                5
-        );
+        MyListsPageObject MyListsPageObject = new MyListsPageObject(driver);
+        MyListsPageObject.openFolderByName(name_of_folder);
+        MyListsPageObject.clickMoreOptions();
+        MyListsPageObject.clickToDeleteList();
 
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
-                "Cannot close article, cannot find back button",
-                5
-        );
-
-        if (MainPageObject.isElementPresent(By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"))) {
-            MainPageObject.waitForElementAndClick(
-                    By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"),
-                    "Cannot close search, cannot find back button",
-                    5
-            );
-        }
-
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//android.widget.FrameLayout[@content-desc='Saved']"),
-                "Cannot find navigation button to saved articles",
-                5
-        );
-
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/item_title'][@text='" + name_of_folder + "']"),
-                "Cannot find created folder",
-                5
-        );
-
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//android.widget.ImageView[@content-desc='More options']"),
-                "Cannot find three dots button",
-                5
-        );
-
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//android.widget.TextView[@text='Delete list']"),
-                "Cannot find delete action",
-                5
-        );
-
-        MainPageObject.waitForElementAndClick(
-                By.id("android:id/button1"),
-                "Cannot press OK button",
-                5
-        );
 
         MainPageObject.waitForElementNotPresent(
                 By.xpath("//*[@resource-id='org.wikipedia:id/item_title'][@text='Learning programming']"),
