@@ -5,15 +5,16 @@ import org.openqa.selenium.By;
 
 public class MyListsPageObject extends MainPageObject {
 
-    private static final String
-    MORE_OPTIONS = "//android.widget.ImageView[@content-desc='More options']",
-    DELETE_LIST = "//android.widget.TextView[@text='Delete list']",
-    OK_BUTTON = "android:id/button1";
-
     public static final String
-        FOLDER_BY_NAME_TPL = "//*[@resource-id='org.wikipedia:id/item_title'][@text='{FOLDER_NAME}']";
+        FOLDER_BY_NAME_TPL = "//*[@resource-id='org.wikipedia:id/item_title'][@text='{FOLDER_NAME}']",
+        ARTICLE_BY_TITLE_TPL = "//*[contains(@text, '{TITLE}')]";
+
     private static String getFolderXpathByName(String name_of_folder) {
         return FOLDER_BY_NAME_TPL.replace("{FOLDER_NAME}", name_of_folder);
+    }
+
+    private static String getSavedArticleXpathByTitle(String article_title) {
+        return ARTICLE_BY_TITLE_TPL.replace("{TITLE}", article_title);
     }
 
     public MyListsPageObject(AppiumDriver driver) {
@@ -30,27 +31,25 @@ public class MyListsPageObject extends MainPageObject {
         );
     }
 
-    public void clickMoreOptions() {
-
-        this.waitForElementAndClick(
-                By.xpath(MORE_OPTIONS),
-                "Cannot find three dots button",
-                5
-        );
+    public void waitForArticleToAppearByTitle(String article_title) {
+        String article_xpath = getSavedArticleXpathByTitle(article_title);
+        this.waitForElementPresent(By.xpath(article_xpath), "Cannot find saved article by title " + article_title, 15);
     }
 
-    public void clickToDeleteList() {
-
-        this.waitForElementAndClick(
-                By.xpath(DELETE_LIST),
-                "Cannot find delete action",
-                5
-        );
-
-        this.waitForElementAndClick(
-                By.id(OK_BUTTON),
-                "Cannot press OK button",
-                5
-        );
+    public void waitForArticleToDisappearByTitle(String article_title) {
+        String article_xpath = getSavedArticleXpathByTitle(article_title);
+        this.waitForElementNotPresent(By.xpath(article_xpath), "Saved article still present with title " + article_title, 15);
     }
+
+    public void swipeByArticleToDelete(String article_title) {
+        String article_xpath = getSavedArticleXpathByTitle(article_title);
+        this.waitForArticleToAppearByTitle(article_title);
+        this.swipeElementToLeft(
+                By.xpath(article_xpath),
+                "Cannot swipe the article"
+        );
+        this.waitForArticleToDisappearByTitle(article_title);
+    }
+
+
 }

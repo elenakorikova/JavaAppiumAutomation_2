@@ -99,4 +99,12 @@ public class ArticlePageObject extends MainPageObject {
         }
     }
 
+    public void clickBackButton() {
+        this.waitForElementAndClick(
+                By.xpath(CLOSE_ARTICLE_BUTTON),
+                "Cannot find back button",
+                5
+        );
+    }
+
 }

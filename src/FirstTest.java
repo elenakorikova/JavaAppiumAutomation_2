@@ -185,9 +185,10 @@ public class FirstTest extends CoreTestCase {
         SearchPageObject.clickByArticleWithSubString("Object-oriented programming language");
 
         ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject.clickButtonOnTabbar();
         ArticlePageObject.waitForTitleElement();
-
         String article_title = ArticlePageObject.getArticleTitle();
+        ArticlePageObject.clickBackButton();
         String name_of_folder = "Learning programming";
         ArticlePageObject.addArticleToMyList(name_of_folder);
         ArticlePageObject.closeArticle();
@@ -197,16 +198,7 @@ public class FirstTest extends CoreTestCase {
 
         MyListsPageObject MyListsPageObject = new MyListsPageObject(driver);
         MyListsPageObject.openFolderByName(name_of_folder);
-        MyListsPageObject.clickMoreOptions();
-        MyListsPageObject.clickToDeleteList();
-
-
-        MainPageObject.waitForElementNotPresent(
-                By.xpath("//*[@resource-id='org.wikipedia:id/item_title'][@text='Learning programming']"),
-                "Cannot delete folder",
-                5
-        );
-
+        MyListsPageObject.swipeByArticleToDelete(article_title);
     }
 
     @Test

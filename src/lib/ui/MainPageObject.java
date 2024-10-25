@@ -23,15 +23,6 @@ public class MainPageObject {
         this.driver = driver;
     }
 
-    public void waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        boolean isNotPresent = wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
-
-        if (!isNotPresent) {
-            throw new AssertionError(error_message);
-        }
-    }
-
     public WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
@@ -64,6 +55,15 @@ public class MainPageObject {
             return true;
         }
 
+    }
+
+    public void waitForElementNotPresent(By by, String error_message, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        boolean isNotPresent = wait.until(driver -> isElementNotPresent(by));
+
+        if (!isNotPresent) {
+            throw new AssertionError(error_message);
+        }
     }
 
     public WebElement waitForElementAndClear(By by, String error_message, long timeOutInSeconds) {
