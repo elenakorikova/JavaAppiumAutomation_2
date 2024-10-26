@@ -205,32 +205,12 @@ public class FirstTest extends CoreTestCase {
 
     public void testAmountOfNotEmptySearch() {
 
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Cannot find Search Wikipedia input",
-                5
-        );
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
 
+        SearchPageObject.initSearchInput();
         String search_line = "Linkin Park Discography";
-
-        MainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                search_line,
-                "Cannot find search input",
-                5
-        );
-
-        String search_result_locator = "//*[@resource-id='org.wikipedia:id/search_results_list']//android.widget.TextView[@text='Linkin Park discography']";
-
-        MainPageObject.waitForElementPresent(
-                By.xpath(search_result_locator),
-                "Cannot find anything by the request " + search_line,
-                15
-        );
-
-        int amount_of_search_result = MainPageObject.getAmountOfElements(
-                By.xpath(search_result_locator)
-        );
+        SearchPageObject.typeSearchLine(search_line);
+        int amount_of_search_result = SearchPageObject.getAmountOfFoundArticles();
 
         Assert.assertTrue(
                 "We found too few results!",
@@ -243,35 +223,13 @@ public class FirstTest extends CoreTestCase {
 
     public void testAmountOfEmptySearch() {
 
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Cannot find Search Wikipedia input",
-                5
-        );
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
 
+        SearchPageObject.initSearchInput();
         String search_line = "nnsdjknsjds";
-
-        MainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                search_line,
-                "Cannot find search input",
-                5
-        );
-
-        String search_result_locator = "//*[@resource-id='org.wikipedia:id/search_results_list']//android.widget.TextView[@text != 'No results']";
-        String empty_result_label = "//*[@text='No results']";
-
-        MainPageObject.waitForElementPresent(
-                By.xpath(empty_result_label),
-                "Cannot find empty result label by the request" + search_line,
-                15
-        );
-
-        MainPageObject.assertElemetNotPresent(
-                By.xpath(search_result_locator),
-                "We've found some results by request " + search_line
-        );
-
+        SearchPageObject.typeSearchLine(search_line);
+        SearchPageObject.waitForEmptyResultsLabel();
+        SearchPageObject.assertThereIsNoResultOfSearch();
     }
 
     @Test
