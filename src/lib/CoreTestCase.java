@@ -30,6 +30,8 @@ public class CoreTestCase extends TestCase {
         capabilities.setCapability("app", "/Users/elenakorikova/Desktop/JavaAppiumAutomation/JavaAppiumAutomation_2/JavaAppiumAutomation_2/apks/org.wikipedia_50467_apps.evozi.com.apk");
 
         driver = new AndroidDriver(new URL(AppiumURL), capabilities);
+        this.rotateScreenPortrait();
+
         if (driver != null) {
             Map<String, Object> params = new HashMap<>();
             params.put("appId", "org.wikipedia");
@@ -63,5 +65,17 @@ public class CoreTestCase extends TestCase {
             driver.executeScript("mobile: terminateApp", params);
             driver.quit();
         }
+    }
+
+    protected void rotateScreenPortrait() {
+        driver.rotate(ScreenOrientation.PORTRAIT);
+    }
+
+    protected void rotateScreenLandscape() {
+        driver.rotate(ScreenOrientation.LANDSCAPE);
+    }
+
+    protected void backgroundApp(int seconds) {
+        driver.runAppInBackground(seconds);
     }
 }

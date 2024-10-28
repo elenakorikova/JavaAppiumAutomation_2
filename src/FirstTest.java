@@ -236,40 +236,21 @@ public class FirstTest extends CoreTestCase {
 
     public void testChangeScreenOrientationOnSearchResults() {
 
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Cannot find Search Wikipedia input",
-                5
-        );
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Java");
+        SearchPageObject.clickByArticleWithSubString("Object-oriented programming language");
 
-        String search_line = "Java";
-
-        MainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                search_line,
-                "Cannot find search input",
-                5
-        );
-
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/page_list_item_description"),
-                "Cannot find Search Wikipedia input",
-                15
-        );
-
-        String tittle_before_rotation = MainPageObject.waitForElementAndGetText(
-                By.xpath("//*[contains(@text, 'Java (programming language)')]"),
-                "Cannot find title of article",
-                15
-        );
-
-        driver.rotate(ScreenOrientation.LANDSCAPE);
-
-        String tittle_after_rotation = MainPageObject.waitForElementAndGetText(
-                By.xpath("//*[contains(@text, 'Java (programming language)')]"),
-                "Cannot find title of article",
-                15
-        );
+        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject.clickButtonOnTabbar();
+        ArticlePageObject.waitForTitleElement();
+        String tittle_before_rotation = ArticlePageObject.getArticleTitle();
+        ArticlePageObject.clickBackButton();
+        this.rotateScreenLandscape();
+        ArticlePageObject.clickButtonOnTabbar();
+        ArticlePageObject.waitForTitleElement();
+        String tittle_after_rotation = ArticlePageObject.getArticleTitle();
+        ArticlePageObject.clickBackButton();
 
         Assert.assertEquals(
                 "Article title have been changed after screen rotation",
@@ -277,13 +258,11 @@ public class FirstTest extends CoreTestCase {
                 tittle_after_rotation
         );
 
-        driver.rotate(ScreenOrientation.PORTRAIT);
-
-        String tittle_after_second_rotation = MainPageObject.waitForElementAndGetText(
-                By.xpath("//*[contains(@text, 'Java (programming language)')]"),
-                "Cannot find title of article",
-                15
-        );
+        this.rotateScreenPortrait();
+        ArticlePageObject.clickButtonOnTabbar();
+        ArticlePageObject.waitForTitleElement();
+        String tittle_after_second_rotation = ArticlePageObject.getArticleTitle();
+        ArticlePageObject.clickBackButton();
 
         Assert.assertEquals(
                 "Article title have been changed after screen rotation",
@@ -296,33 +275,12 @@ public class FirstTest extends CoreTestCase {
 
     public void testCheckSearchArticleInBackground() {
 
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Cannot find Search Wikipedia input",
-                5
-        );
-
-        MainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Java",
-                "Cannot find search input",
-                5
-        );
-
-        MainPageObject.waitForElementPresent(
-                By.id("org.wikipedia:id/page_list_item_description"),
-                "Cannot find Search Wikipedia input",
-                5
-        );
-
-        driver.runAppInBackground(2);
-
-        MainPageObject.waitForElementPresent(
-                By.id("org.wikipedia:id/page_list_item_description"),
-                "Cannot find article after returning from background",
-                5
-        );
-
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Java");
+        SearchPageObject.waitForSearchResult("Object-oriented programming language");
+        this.backgroundApp(2);
+        SearchPageObject.waitForSearchResult("Object-oriented programming language");
     }
 
     @Test
