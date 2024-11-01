@@ -2,6 +2,7 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 public class SearchPageObject extends MainPageObject {
 
@@ -11,7 +12,8 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_description'][@text='{SUBSTRING}']",
             SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']//android.widget.TextView[@text='Linkin Park discography']",
-            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results']";
+            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results']",
+            SEARCH_PLACEHOLDER = "org.wikipedia:id/search_src_text";
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
     }
@@ -33,7 +35,7 @@ public class SearchPageObject extends MainPageObject {
         this.waitForElementPresent(By.id(SEARCH_CANCEL_BUTTON), "Cannot find search cancel button", 5);
     }
 
-    public void waitForCancelButtonToDisppear() {
+    public void waitForCancelButtonToDisappear() {
         this.assertElemetNotPresent(By.id(SEARCH_CANCEL_BUTTON), "Search cancel button is still present");
     }
 
@@ -72,5 +74,13 @@ public class SearchPageObject extends MainPageObject {
 
     public void assertThereIsNoResultOfSearch() {
         this.assertElemetNotPresent(By.xpath(SEARCH_RESULT_ELEMENT), "We supposed not to find any results");
+    }
+
+    public WebElement getPlaceholderName() {
+        return this.waitForElementPresent(
+                By.id(SEARCH_PLACEHOLDER),
+                "Cannot find placeholder in search field",
+                5
+        );
     }
 }
