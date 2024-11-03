@@ -107,4 +107,11 @@ public class ArticlePageObject extends MainPageObject {
         );
     }
 
+    public void checkPresenseOfTitle() {
+        this.assertElementPresent(
+                By.id(TITLE),
+                "The title element was not found on the page."
+        );
+    }
+
 }

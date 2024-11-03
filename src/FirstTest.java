@@ -236,39 +236,4 @@ public class FirstTest extends CoreTestCase {
         );
     }
 
-    @Test
-
-    public void testArticleHaveTitle() {
-
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Cannot find Search Wikipedia input",
-                5
-        );
-
-        MainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Java",
-                "Cannot find search input",
-                5
-        );
-
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Java (programming language)')]"),
-                "Cannot find Java article",
-                5
-        );
-
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/page_contents"),
-                "Cannot find Contents button",
-                5
-        );
-
-        MainPageObject.assertElementPresent(
-                By.id("org.wikipedia:id/page_toc_item_text"),
-                "Элемент заголовка не найден на странице"
-        );
-
-    }
 }
