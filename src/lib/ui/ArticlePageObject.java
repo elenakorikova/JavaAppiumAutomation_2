@@ -4,10 +4,13 @@ import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import static lib.ui.MyListsPageObject.FOLDER_BY_NAME_TPL;
+
 public class ArticlePageObject extends MainPageObject {
 
     private static final String
         TITLE = "org.wikipedia:id/page_toc_item_text",
+        TITLE_IN_THE_LIST = "org.wikipedia:id/page_list_item_title",
         CONTENT_BUTTON = "org.wikipedia:id/page_contents",
         FOOTER_ELEMENT = "//*[@text='View article in browser']",
         OPTIONS_BUTTON = "org.wikipedia:id/page_toolbar_button_show_overflow_menu",
@@ -28,6 +31,15 @@ public class ArticlePageObject extends MainPageObject {
 
     public String getArticleTitle() {
         WebElement title_element = waitForTitleElement();
+        return title_element.getText();
+    }
+
+    public WebElement waitForTitleElementInTheList() {
+        return this.waitForElementPresent(By.id(TITLE_IN_THE_LIST), "Cannot find article title in the list", 15 );
+    }
+
+    public String getArticleTitleInTheList() {
+        WebElement title_element = waitForTitleElementInTheList();
         return title_element.getText();
     }
 
@@ -111,6 +123,35 @@ public class ArticlePageObject extends MainPageObject {
         this.assertElementPresent(
                 By.id(TITLE),
                 "The title element was not found on the page."
+        );
+    }
+
+    public void addArticleToExistingList() {
+        this.waitForElementAndClick(
+                By.id(OPTIONS_BUTTON),
+                "Cannot find button to open article options",
+                5
+        );
+
+        this.waitForElementAndClick(
+                By.id(OPTIONS_SAVE_BUTTON),
+                "Cannot find option to save article",
+                5
+        );
+
+        this.waitForElementAndClick(
+                By.id(OPTIONS_SAVE_TO_MY_LIST_BUTTON),
+                "Cannot find button Add to list",
+                5
+        );
+
+        MyListsPageObject MyListsPageObject = new MyListsPageObject (driver);
+        MyListsPageObject.openFolderByName("Learning programming");
+
+        this.waitForElementAndClick(
+                By.id(OPTIONS_SAVE_TO_MY_LIST_BUTTON),
+                "Cannot find 'View list' button",
+                5
         );
     }
 
