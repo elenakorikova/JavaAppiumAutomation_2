@@ -4,7 +4,10 @@ import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.util.List;
+
 import static lib.ui.MyListsPageObject.FOLDER_BY_NAME_TPL;
+import static org.junit.Assert.assertTrue;
 
 public class ArticlePageObject extends MainPageObject {
 
@@ -155,4 +158,16 @@ public class ArticlePageObject extends MainPageObject {
         );
     }
 
-}
+    public void validateTwoOrMoreArticlesPresent() {
+        List<WebElement> articles = driver.findElements(By.id(TITLE_IN_THE_LIST));
+        assertTrue("Less than 2 articles found!", articles.size() > 1);
+    }
+
+    public void checkNoArticlesDisplayedAfterCancel() {
+        List<WebElement> articlesAfterCancel = driver.findElements(By.id(TITLE_IN_THE_LIST));
+        assertTrue(
+                "Articles are still displayed after search is canceled!",
+                articlesAfterCancel.size() == 0
+        );
+    }
+ }

@@ -17,44 +17,6 @@ public class FirstTest extends CoreTestCase {
 
     @Test
 
-    public void testSearchAndCancelSearchOfArticles() {
-
-        MainPageObject.waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Cannot find Search input field",
-                5
-        );
-
-        MainPageObject.waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "Baikal",
-                "Cannot find search input",
-                5
-
-        );
-
-        List<WebElement> articles = driver.findElements(By.id("org.wikipedia:id/page_list_item_title"));
-       assertTrue("Less than 2 articles found!", articles.size() > 1);
-
-        MainPageObject.waitForElementAndClick(
-                By.id("org.wikipedia:id/search_close_btn"),
-                "Cannot find X to cancel search",
-                5
-        );
-
-        boolean elementNotPresent = MainPageObject.isElementNotPresent(
-                By.id("org.wikipedia:id/search_close_btn"));
-        assertTrue("X is still present on the page", elementNotPresent);
-
-        List<WebElement> articlesAfterCancel = driver.findElements(By.id("org.wikipedia:id/page_list_item_title"));
-       assertTrue(
-                "Articles are still displayed after search is canceled!",
-                articlesAfterCancel.size() == 0
-        );
-    }
-
-    @Test
-
     public void testSearchOfCorrectArticles() {
 
         MainPageObject.waitForElementAndClick(

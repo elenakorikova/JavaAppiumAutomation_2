@@ -1,6 +1,7 @@
 package tests;
 
 import lib.CoreTestCase;
+import lib.ui.ArticlePageObject;
 import lib.ui.SearchPageObject;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
@@ -74,5 +75,20 @@ public class SearchTests extends CoreTestCase {
                 "Search Wikipedia",
                 placeholder
         );
+    }
+
+    @Test
+
+    public void testSearchAndCancelSearchOfArticles() {
+
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Baikal");
+        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject.validateTwoOrMoreArticlesPresent();
+        SearchPageObject.clickCancelSearch();
+        SearchPageObject.waitForCancelButtonToDisappear();
+        ArticlePageObject.checkNoArticlesDisplayedAfterCancel();
+
     }
 }
