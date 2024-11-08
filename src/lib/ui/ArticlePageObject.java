@@ -12,16 +12,16 @@ import static org.junit.Assert.assertTrue;
 public class ArticlePageObject extends MainPageObject {
 
     private static final String
-        TITLE = "org.wikipedia:id/page_toc_item_text",
-        TITLE_IN_THE_LIST = "org.wikipedia:id/page_list_item_title",
-        CONTENT_BUTTON = "org.wikipedia:id/page_contents",
-        FOOTER_ELEMENT = "//*[@text='View article in browser']",
-        OPTIONS_BUTTON = "org.wikipedia:id/page_toolbar_button_show_overflow_menu",
-        OPTIONS_SAVE_BUTTON = "org.wikipedia:id/page_save",
-        OPTIONS_SAVE_TO_MY_LIST_BUTTON = "org.wikipedia:id/snackbar_action",
-        MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
-        MY_LIST_OK_BUTTON = "android:id/button1",
-        CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']";
+            TITLE = "org.wikipedia:id/page_toc_item_text",
+            TITLE_IN_THE_LIST = "org.wikipedia:id/page_list_item_title",
+            CONTENT_BUTTON = "org.wikipedia:id/page_contents",
+            FOOTER_ELEMENT = "//*[@text='View article in browser']",
+            OPTIONS_BUTTON = "org.wikipedia:id/page_toolbar_button_show_overflow_menu",
+            OPTIONS_SAVE_BUTTON = "org.wikipedia:id/page_save",
+            OPTIONS_SAVE_TO_MY_LIST_BUTTON = "org.wikipedia:id/snackbar_action",
+            MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
+            MY_LIST_OK_BUTTON = "android:id/button1",
+            CLOSE_ARTICLE_BUTTON = "//android.widget.ImageButton[@content-desc='Navigate up']";
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
@@ -38,7 +38,7 @@ public class ArticlePageObject extends MainPageObject {
     }
 
     public WebElement waitForTitleElementInTheList() {
-        return this.waitForElementPresent(By.id(TITLE_IN_THE_LIST), "Cannot find article title in the list", 15 );
+        return this.waitForElementPresent(By.id(TITLE_IN_THE_LIST), "Cannot find article title in the list", 15);
     }
 
     public String getArticleTitleInTheList() {
@@ -148,7 +148,7 @@ public class ArticlePageObject extends MainPageObject {
                 5
         );
 
-        MyListsPageObject MyListsPageObject = new MyListsPageObject (driver);
+        MyListsPageObject MyListsPageObject = new MyListsPageObject(driver);
         MyListsPageObject.openFolderByName("Learning programming");
 
         this.waitForElementAndClick(
@@ -170,4 +170,20 @@ public class ArticlePageObject extends MainPageObject {
                 articlesAfterCancel.size() == 0
         );
     }
- }
+
+    public List<WebElement> getArticleTitles() {
+        return driver.findElements(By.id(TITLE_IN_THE_LIST));
+    }
+
+    public void verifyArticlesFound(List<WebElement> articles) {
+        assertTrue("No articles found!", articles.size() > 0);
+    }
+
+    public void verifyArticlesContainKeyword(List<WebElement> articles, String keyword) {
+        for (WebElement article : articles) {
+            String articleTitle = article.getText();
+            assertTrue("The article title does not contain the expected keyword! " + articleTitle,
+                    articleTitle.contains(keyword));
+        }
+    }
+}

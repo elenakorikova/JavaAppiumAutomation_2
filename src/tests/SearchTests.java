@@ -6,6 +6,8 @@ import lib.ui.SearchPageObject;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
+import java.util.List;
+
 public class SearchTests extends CoreTestCase {
 
     @Test
@@ -46,7 +48,6 @@ public class SearchTests extends CoreTestCase {
                 "We found too few results!",
                 amount_of_search_result > 0
         );
-
     }
 
     @Test
@@ -54,7 +55,6 @@ public class SearchTests extends CoreTestCase {
     public void testAmountOfEmptySearch() {
 
         SearchPageObject SearchPageObject = new SearchPageObject(driver);
-
         SearchPageObject.initSearchInput();
         String search_line = "nnsdjknsjds";
         SearchPageObject.typeSearchLine(search_line);
@@ -89,6 +89,19 @@ public class SearchTests extends CoreTestCase {
         SearchPageObject.clickCancelSearch();
         SearchPageObject.waitForCancelButtonToDisappear();
         ArticlePageObject.checkNoArticlesDisplayedAfterCancel();
+    }
 
+    @Test
+
+    public void testSearchOfCorrectArticles() {
+
+        SearchPageObject SearchPageObject = new SearchPageObject(driver);
+        SearchPageObject.initSearchInput();
+        SearchPageObject.typeSearchLine("Angarsk");
+
+        ArticlePageObject ArticlePageObject = new ArticlePageObject(driver);
+        List<WebElement> articles = ArticlePageObject.getArticleTitles();
+        ArticlePageObject.verifyArticlesFound(articles);
+        ArticlePageObject.verifyArticlesContainKeyword(articles, "Angarsk");
     }
 }
