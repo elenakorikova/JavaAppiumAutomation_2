@@ -13,7 +13,8 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_RESULT_BY_SUBSTRING_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_description'][@text='{SUBSTRING}']",
             SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']//android.widget.TextView[@text='Linkin Park discography']",
             SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results']",
-            SEARCH_PLACEHOLDER = "org.wikipedia:id/search_src_text";
+            SEARCH_PLACEHOLDER = "org.wikipedia:id/search_src_text",
+            SEARCH_RESULT_BY_TITLE_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_title' and contains(@text, '{TITLE}')]";
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
     }
@@ -22,6 +23,10 @@ public class SearchPageObject extends MainPageObject {
 
     private static String getResultSearchElement(String substring) {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}", substring);
+    }
+
+    private static String getResultElementByTitle(String title) {
+        return SEARCH_RESULT_BY_TITLE_TPL.replace("{TITLE}", title);
     }
 
     /* TEMPLATES METHODS */
@@ -82,5 +87,13 @@ public class SearchPageObject extends MainPageObject {
                 "Cannot find placeholder in search field",
                 5
         );
+    }
+
+    public void waitForElementByTitleAndDescription(String title, String substring) {
+        String titleXPath = getResultElementByTitle(title);
+        String substringXPath = getResultSearchElement(substring);
+
+        this.waitForElementPresent(By.xpath(titleXPath), "Cannot find search result with title: '" + title + "'", 10);
+        this.waitForElementPresent(By.xpath(substringXPath), "Cannot find search result with substring: '" + substring + "'", 10);
     }
 }
