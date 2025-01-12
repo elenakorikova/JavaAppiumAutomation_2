@@ -1,5 +1,5 @@
 plugins {
-    id("java")
+    java
 }
 
 group = "org.example"
@@ -10,12 +10,10 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    implementation("org.seleniumhq.selenium:selenium-java:1.8.0_231")
-    implementation("io.appium:java-client:7.6.0")
+    testImplementation("junit:junit:4.13.2")
+    implementation("org.seleniumhq.selenium:selenium-java:4.13.0")
+    implementation("io.appium:java-client:8.4.0")
 }
 
 tasks.test {
-    useJUnitPlatform()
 }

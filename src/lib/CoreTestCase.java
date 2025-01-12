@@ -7,6 +7,7 @@ import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.URL;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,4 +79,6 @@ public class CoreTestCase extends TestCase {
     protected void backgroundApp(int seconds) {
         driver.runAppInBackground(seconds);
     }
+
+
 }

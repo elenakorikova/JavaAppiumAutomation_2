@@ -24,11 +24,9 @@ public class MainPageObject {
     }
 
     public WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds); // Selenium 3
         wait.withMessage(error_message + "\n");
-        return wait.until(
-                ExpectedConditions.presenceOfElementLocated(by)
-        );
+        return wait.until(ExpectedConditions.presenceOfElementLocated(by)); // Без кастинга
     }
 
     public WebElement waitForElementPresent(By by, String error_message) {
